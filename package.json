@@ -1,0 +1,24 @@
+{
+  "name": "2023-react-todolist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShinjungOh/2023-react-todolist.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShinjungOh/2023-react-todolist/issues"
+  },
+  "homepage": "https://github.com/ShinjungOh/2023-react-todolist#readme",
+  "devDependencies": {
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.8.1"
+  }
+}
