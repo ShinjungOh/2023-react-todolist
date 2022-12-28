@@ -1,7 +1,0 @@
-{
-  "extends": ["prettier"],
-  "rules": {
-    "no-var": "warn",
-    "eqeqeq": "error"
-  }
-}
