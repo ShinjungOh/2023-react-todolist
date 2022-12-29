@@ -2,10 +2,13 @@ import React from 'react';
 
 import { Page } from './ui/components/layout';
 import GlobalStyles from './ui/core/GlobalStyles';
+import Router from './Router';
 
 const App = () => (
   <>
-    <Page>Layout</Page>
+    <Page>
+      <Router />
+    </Page>
     <GlobalStyles />
   </>
 );
