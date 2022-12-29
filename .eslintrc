@@ -50,10 +50,6 @@
     ],
     "import/prefer-default-export": "off",
     "no-plusplus": "off",
-    "semi": [
-      "error",
-      "always"
-    ],
     "react/jsx-filename-extension": [
       "error",
       {

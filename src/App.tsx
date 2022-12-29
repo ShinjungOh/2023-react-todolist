@@ -1,9 +1,13 @@
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header"></header>
-    </div>
-  )
-}
+import React from 'react';
 
-export default App
+import { Page } from './ui/components/layout';
+import GlobalStyles from './ui/core/GlobalStyles';
+
+const App = () => (
+  <>
+    <Page>Layout</Page>
+    <GlobalStyles />
+  </>
+);
+
+export default App;
