@@ -1,5 +1,12 @@
 import React from 'react';
 
-const Todo = () => <>Todos</>;
+import { TodoCreate, TodoList } from '../components/todo';
+
+const Todo = () => (
+  <>
+    <TodoList />
+    <TodoCreate />
+  </>
+);
 
 export default Todo;
