@@ -1,13 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router';
 
-const Home = () => (
-  <Container>
-    <Title>투두리스트</Title>
-    <Button>로그인</Button>
-    <Button>회원가입</Button>
-  </Container>
-);
+import { Path } from '../../lib/const/path';
+
+const Home = () => {
+  const navigate = useNavigate();
+
+  const goToSignInPageButton = () => {
+    navigate(Path.SIGNIN);
+  };
+
+  const goToSignUpPageButton = () => {
+    navigate(Path.SIGNUP);
+  };
+
+  return (
+    <Container>
+      <Title>투두리스트</Title>
+      <Button onClick={goToSignInPageButton}>로그인</Button>
+      <Button onClick={goToSignUpPageButton}>회원가입</Button>
+    </Container>
+  );
+};
 
 export default Home;
 

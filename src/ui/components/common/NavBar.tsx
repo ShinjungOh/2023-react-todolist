@@ -2,9 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { FaLessThan } from 'react-icons/fa';
 
-const NavBar = () => (
+interface Props {
+  goBackButton: () => void;
+}
+
+const NavBar = ({ goBackButton }: Props) => (
   <Container>
-    <NavIcon>
+    <NavIcon onClick={goBackButton}>
       <FaLessThan />
     </NavIcon>
   </Container>
@@ -22,6 +26,7 @@ const NavIcon = styled.div`
   width: 40px;
   height: 100%;
   padding-left: 15px;
+  cursor: pointer;
   font-size: 20px;
   display: flex;
   flex-direction: row;

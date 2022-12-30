@@ -6,7 +6,7 @@ export interface TextFieldProps {
   id?: string;
   name?: string;
   placeholder: string;
-  onChange?: () => void;
+  onChange?: (e: any) => void;
   error?: boolean;
   errorMessage?: string;
 
