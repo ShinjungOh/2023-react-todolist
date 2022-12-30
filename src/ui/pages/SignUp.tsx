@@ -1,17 +1,57 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 
 import TextField from '../components/common/TextField';
 import NavBar from '../components/common/NavBar';
-// import { signUpApi } from '../../lib/apis/authUserApi';
+import { signUpApi } from '../../lib/apis/authUserApi';
+
+export interface UserProps {
+  email: string;
+  password: string;
+  passwordCheck: string;
+}
+
+export interface UserValidationProps {
+  email: boolean;
+  password: boolean;
+  passwordCheck: boolean;
+}
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<UserProps>({
     email: '',
     password: '',
+    passwordCheck: '',
   });
+
+  const [userValidation, setUserValidation] = useState<UserValidationProps>({
+    email: false,
+    password: false,
+    passwordCheck: false,
+  });
+
+  const isErrorUserValidation = useMemo((() => !(userValidation.email && userValidation.password && userValidation.passwordCheck)), [userValidation.email, userValidation.password, userValidation.passwordCheck]);
+
+  const checkUserValidation = () => {
+    const emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    const regExp = new RegExp(user.email);
+    const emailRegExpCheck = regExp.test(String(emailRegExp));
+
+    if (emailRegExpCheck) {
+      // @ts-ignore
+      setUserValidation((userValidation.email));
+    }
+    if (user.password.length >= 8) {
+      // @ts-ignore
+      setUserValidation(userValidation.password);
+    }
+    if (user.passwordCheck === user.password) {
+      // @ts-ignore
+      setUserValidation(userValidation.passwordCheck);
+    }
+  };
 
   const goBackButton = () => {
     navigate(-1);
@@ -20,6 +60,20 @@ const SignUp = () => {
   const onChangeSignUp = (e: any) => {
     const { value } = e.target;
     setUser(value);
+    console.log(value);
+    checkUserValidation();
+  };
+
+  // eslint-disable-next-line consistent-return
+  const onSubmitSignUp = async (e: any) => {
+    try {
+      e.preventDefault();
+      accessSignUp();
+      const response = await signUpApi(user);
+      return response;
+    } catch (e) {
+      alert('에러 발생');
+    }
   };
 
   const accessSignUp = () => {
@@ -36,13 +90,22 @@ const SignUp = () => {
     <Container>
       <NavBar goBackButton={goBackButton} />
       <Title>회원가입</Title>
-      <TextField label="이메일" id="email" name="email" placeholder="이메일을 입력하세요." errorMessage="이메일 형식이 올바르지 않습니다." onChange={onChangeSignUp} />
+      <TextField
+        label="이메일"
+        id="email"
+        name="email"
+        placeholder="이메일을 입력하세요."
+        errorMessage="이메일 형식이 올바르지 않습니다."
+        isErrorUserValidation={isErrorUserValidation}
+        onChange={onChangeSignUp}
+      />
       <TextField
         label="비밀번호"
         id="password"
         name="password"
         placeholder="비밀번호를 입력하세요."
         errorMessage="비밀번호 형식이 올바르지 않습니다."
+        isErrorUserValidation={isErrorUserValidation}
         onChange={onChangeSignUp}
       />
       <TextField
@@ -51,9 +114,10 @@ const SignUp = () => {
         name="passwordCheck"
         placeholder="비밀번호를 확인해 주세요"
         errorMessage="비밀번호가 동일하지 않습니다."
+        isErrorUserValidation={isErrorUserValidation}
         onChange={onChangeSignUp}
       />
-      <Button onClick={accessSignUp}>회원가입하기</Button>
+      <Button onClick={onSubmitSignUp}>회원가입하기</Button>
     </Container>
   );
 };

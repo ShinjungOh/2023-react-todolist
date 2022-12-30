@@ -7,7 +7,7 @@ export interface TextFieldProps {
   name?: string;
   placeholder: string;
   onChange?: (e: any) => void;
-  error?: boolean;
+  isErrorUserValidation?: boolean;
   errorMessage?: string;
 
   [K: string]: any;
@@ -19,12 +19,13 @@ const TextField = ({
   label,
   placeholder,
   onChange,
+  isErrorUserValidation,
   errorMessage,
 }: TextFieldProps) => (
   <TextFieldContainer>
     <Label htmlFor={id}>{label}</Label>
     <Input type="text" id={id} name={name} placeholder={placeholder} onChange={onChange} />
-    {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+    {isErrorUserValidation && <ErrorMessage>{errorMessage}</ErrorMessage>}
   </TextFieldContainer>
 );
 
@@ -37,7 +38,7 @@ const TextFieldContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  
+
   & + & {
     margin-top: 20px;
   }

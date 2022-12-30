@@ -1,14 +1,10 @@
 import { client } from './client';
-
-interface AuthUserProps {
-  email: string;
-  password: string;
-}
+import { UserProps } from '../../ui/pages/SignUp';
 
 export const signUpApi = async ({
   email,
   password,
-}: AuthUserProps) => {
+}: UserProps) => {
   const url = '/auth/signup';
   const data = {
     email,
@@ -21,7 +17,7 @@ export const signUpApi = async ({
 export const signInApi = async ({
   email,
   password,
-}: AuthUserProps) => {
+}: UserProps) => {
   const url = '/auth/signin';
   const data = {
     email,
