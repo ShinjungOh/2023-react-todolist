@@ -1,5 +1,5 @@
 import { client } from './client';
-import { UserProps } from '../../ui/pages/SignUp';
+import { UserProps } from '../types/authUserProps';
 
 export const signUpApi = async ({
   email,

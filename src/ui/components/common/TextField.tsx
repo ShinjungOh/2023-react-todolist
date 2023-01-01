@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import styled from 'styled-components';
 
 export interface TextFieldProps {
   label?: string;
   id?: string;
   name?: string;
+  type?: string;
   placeholder: string;
-  onChange?: (e: any) => void;
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   isErrorUserValidation?: boolean;
   errorMessage?: string;
 
@@ -14,17 +16,19 @@ export interface TextFieldProps {
 }
 
 const TextField = ({
+  label,
   id,
   name,
-  label,
+  type,
   placeholder,
+  value,
   onChange,
   isErrorUserValidation,
   errorMessage,
 }: TextFieldProps) => (
   <TextFieldContainer>
     <Label htmlFor={id}>{label}</Label>
-    <Input type="text" id={id} name={name} placeholder={placeholder} onChange={onChange} />
+    <Input type={type} id={id} name={name} placeholder={placeholder} value={value} onChange={onChange} />
     {isErrorUserValidation && <ErrorMessage>{errorMessage}</ErrorMessage>}
   </TextFieldContainer>
 );

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 
 import TextField from '../components/common/TextField';
 import NavBar from '../components/common/NavBar';
-// import { signInApi } from '../../lib/apis/authUserApi';
+import { signInApi } from '../../lib/apis/authUserApi';
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -17,18 +17,24 @@ const SignIn = () => {
     navigate(-1);
   };
 
-  const onChangeSignIn = (e: any) => {
-    const { value } = e.target;
-    setUser(value);
+  const onChangeSignIn = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setUser({
+      ...user,
+      [name]: value,
+    });
   };
 
-  const accessSignIn = () => {
-    if (localStorage.getItem('ACCESS_TOKEN')) {
+  const onSubmitSignIn = async () => {
+    try {
+      await signInApi({
+        email: user.email,
+        password: user.password,
+      });
       alert('로그인에 성공했습니다.');
       navigate('/todo');
-    } else {
+    } catch (e) {
       alert('로그인에 실패했습니다.');
-      navigate('/');
     }
   };
 
@@ -36,9 +42,9 @@ const SignIn = () => {
     <Container>
       <NavBar goBackButton={goBackButton} />
       <Title>로그인</Title>
-      <TextField label="이메일" id="email" name="email" placeholder="이메일을 입력하세요." onChange={onChangeSignIn} />
-      <TextField label="비밀번호" id="password" name="password" placeholder="비밀번호를 입력하세요." onChange={onChangeSignIn} />
-      <Button onClick={accessSignIn}>로그인하기</Button>
+      <TextField label="이메일" id="email" name="email" type="email" placeholder="이메일을 입력하세요." value={user.email} onChange={onChangeSignIn} />
+      <TextField label="비밀번호" id="password" name="password" type="password" placeholder="비밀번호를 입력하세요." value={user.password} onChange={onChangeSignIn} />
+      <Button onClick={onSubmitSignIn}>로그인하기</Button>
     </Container>
   );
 };

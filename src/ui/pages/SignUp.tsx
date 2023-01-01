@@ -1,22 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { ChangeEvent, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 
 import TextField from '../components/common/TextField';
 import NavBar from '../components/common/NavBar';
 import { signUpApi } from '../../lib/apis/authUserApi';
-
-export interface UserProps {
-  email: string;
-  password: string;
-  passwordCheck: string;
-}
-
-export interface UserValidationProps {
-  email: boolean;
-  password: boolean;
-  passwordCheck: boolean;
-}
+import { UserProps, UserValidationProps } from '../../lib/types/authUserProps';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -57,32 +46,26 @@ const SignUp = () => {
     navigate(-1);
   };
 
-  const onChangeSignUp = (e: any) => {
-    const { value } = e.target;
-    setUser(value);
+  const onChangeSignUp = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setUser({
+      ...user,
+      [name]: value,
+    });
     console.log(value);
-    checkUserValidation();
+    // checkUserValidation();
   };
 
-  // eslint-disable-next-line consistent-return
-  const onSubmitSignUp = async (e: any) => {
+  const onSubmitSignUp = async () => {
     try {
-      e.preventDefault();
-      accessSignUp();
-      const response = await signUpApi(user);
-      return response;
-    } catch (e) {
-      alert('에러 발생');
-    }
-  };
-
-  const accessSignUp = () => {
-    if (localStorage.getItem('ACCESS_TOKEN')) {
+      await signUpApi({
+        email: user.email,
+        password: user.password,
+      });
       alert('회원가입에 성공했습니다.');
       navigate('/todo');
-    } else {
-      alert('회원가입에 실패했습니다.');
-      navigate('/');
+    } catch (e) {
+      alert('에러 발생');
     }
   };
 
@@ -94,27 +77,33 @@ const SignUp = () => {
         label="이메일"
         id="email"
         name="email"
+        type="email"
         placeholder="이메일을 입력하세요."
         errorMessage="이메일 형식이 올바르지 않습니다."
         isErrorUserValidation={isErrorUserValidation}
+        value={user.email}
         onChange={onChangeSignUp}
       />
       <TextField
         label="비밀번호"
         id="password"
         name="password"
+        type="password"
         placeholder="비밀번호를 입력하세요."
         errorMessage="비밀번호 형식이 올바르지 않습니다."
         isErrorUserValidation={isErrorUserValidation}
+        value={user.password}
         onChange={onChangeSignUp}
       />
       <TextField
         label="비밀번호 확인"
         id="passwordCheck"
         name="passwordCheck"
+        type="password"
         placeholder="비밀번호를 확인해 주세요"
         errorMessage="비밀번호가 동일하지 않습니다."
         isErrorUserValidation={isErrorUserValidation}
+        value={user.passwordCheck}
         onChange={onChangeSignUp}
       />
       <Button onClick={onSubmitSignUp}>회원가입하기</Button>
