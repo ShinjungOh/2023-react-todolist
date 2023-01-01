@@ -1,17 +1,33 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router';
 
 import { TodoItem } from './index';
 
-const TodoList = () => (
-  <Container>
-    <Title>📌 할 일 목록</Title>
-    <SignOutButton>로그아웃</SignOutButton>
-    <TodoContainer>
-      <TodoItem />
-    </TodoContainer>
-  </Container>
-);
+interface Props {
+  todos?: [];
+}
+
+const TodoList = ({ todos }: Props) => {
+  const navigate = useNavigate();
+
+  const onClickSignOut = () => {
+    // eslint-disable-next-line no-restricted-globals
+    confirm('로그아웃 하시겠습니까?');
+    localStorage.removeItem('ACCESS_TOKEN');
+    navigate('/', { replace: true });
+  };
+
+  return (
+    <Container>
+      <Title>📌 할 일 목록</Title>
+      <SignOutButton onClick={onClickSignOut}>로그아웃</SignOutButton>
+      <TodoContainer>
+        <TodoItem />
+      </TodoContainer>
+    </Container>
+  );
+};
 
 export default TodoList;
 

@@ -27,11 +27,12 @@ const SignIn = () => {
 
   const onSubmitSignIn = async () => {
     try {
-      await signInApi({
+      const response = await signInApi({
         email: user.email,
         password: user.password,
       });
       alert('로그인에 성공했습니다.');
+      localStorage.setItem('ACCESS_TOKEN', response.data.access_token);
       navigate('/todo');
     } catch (e) {
       alert('로그인에 실패했습니다.');

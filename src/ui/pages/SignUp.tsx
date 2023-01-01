@@ -28,29 +28,6 @@ const SignUp = () => {
   const emailRegExpCheck = emailRegExp.test(user.email);
   const passwordRegCheck = passwordRegExp.test(user.password);
 
-  // const checkUserValidation = () => {
-  // if (emailRegExpCheck) {
-  //   setUserValidation({
-  //     ...userValidation,
-  //     email: true,
-  //   });
-  //   return;
-  // }
-  // if (passwordRegCheck) {
-  //   setUserValidation({
-  //     ...userValidation,
-  //     password: true,
-  //   });
-  //   return;
-  // }
-  // if (user.passwordCheck === user.password) {
-  //   setUserValidation({
-  //     ...userValidation,
-  //     passwordCheck: true,
-  //   });
-  // }
-  // };
-
   const goBackButton = () => {
     navigate(-1);
   };
@@ -88,11 +65,12 @@ const SignUp = () => {
 
   const onSubmitSignUp = async () => {
     try {
-      await signUpApi({
+      const response = await signUpApi({
         email: user.email,
         password: user.password,
       });
       alert('회원가입에 성공했습니다.');
+      localStorage.setItem('ACCESS_TOKEN', response.data.access_token);
       navigate('/todo');
     } catch (e) {
       alert('에러 발생');
