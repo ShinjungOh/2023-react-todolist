@@ -9,7 +9,7 @@ export interface TextFieldProps {
   placeholder: string;
   value?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  isErrorUserValidation?: boolean;
+  isError?: boolean;
   errorMessage?: string;
 
   [K: string]: any;
@@ -23,13 +23,15 @@ const TextField = ({
   placeholder,
   value,
   onChange,
-  isErrorUserValidation,
+  isError,
   errorMessage,
 }: TextFieldProps) => (
   <TextFieldContainer>
     <Label htmlFor={id}>{label}</Label>
     <Input type={type} id={id} name={name} placeholder={placeholder} value={value} onChange={onChange} />
-    {isErrorUserValidation && <ErrorMessage>{errorMessage}</ErrorMessage>}
+    {isError && (
+      <ErrorMessage>{errorMessage}</ErrorMessage>)
+    }
   </TextFieldContainer>
 );
 
@@ -39,7 +41,7 @@ const TextFieldContainer = styled.div`
   width: 100%;
   height: 90px;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   flex-direction: column;
   align-items: center;
 
@@ -54,14 +56,17 @@ const Label = styled.label`
 
 const Input = styled.input`
   width: 275px;
-  height: 80px;
+  height: 50px;
   padding: 0 8px 0 8px;
   border-radius: 5px;
   border: 1px solid #8a8a8a;
+  outline: none;
   cursor: pointer;
 `;
 
 const ErrorMessage = styled.div`
+  width: 275px;
+  height: 16px;
   margin-top: 3px;
   align-items: start;
   color: #dc4545;

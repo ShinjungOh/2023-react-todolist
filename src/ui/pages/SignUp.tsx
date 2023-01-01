@@ -23,24 +23,33 @@ const SignUp = () => {
 
   const isErrorUserValidation = useMemo((() => !(userValidation.email && userValidation.password && userValidation.passwordCheck)), [userValidation.email, userValidation.password, userValidation.passwordCheck]);
 
-  const checkUserValidation = () => {
-    const emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-    const regExp = new RegExp(user.email);
-    const emailRegExpCheck = regExp.test(String(emailRegExp));
+  const emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+  const passwordRegExp = /^[A-Za-z0-9]{7,}$/;
+  const emailRegExpCheck = emailRegExp.test(user.email);
+  const passwordRegCheck = passwordRegExp.test(user.password);
 
-    if (emailRegExpCheck) {
-      // @ts-ignore
-      setUserValidation((userValidation.email));
-    }
-    if (user.password.length >= 8) {
-      // @ts-ignore
-      setUserValidation(userValidation.password);
-    }
-    if (user.passwordCheck === user.password) {
-      // @ts-ignore
-      setUserValidation(userValidation.passwordCheck);
-    }
-  };
+  // const checkUserValidation = () => {
+  // if (emailRegExpCheck) {
+  //   setUserValidation({
+  //     ...userValidation,
+  //     email: true,
+  //   });
+  //   return;
+  // }
+  // if (passwordRegCheck) {
+  //   setUserValidation({
+  //     ...userValidation,
+  //     password: true,
+  //   });
+  //   return;
+  // }
+  // if (user.passwordCheck === user.password) {
+  //   setUserValidation({
+  //     ...userValidation,
+  //     passwordCheck: true,
+  //   });
+  // }
+  // };
 
   const goBackButton = () => {
     navigate(-1);
@@ -52,8 +61,29 @@ const SignUp = () => {
       ...user,
       [name]: value,
     });
-    console.log(value);
-    // checkUserValidation();
+
+    if (name === 'email') {
+      setUserValidation({
+        ...userValidation,
+        [name]: emailRegExpCheck,
+      });
+      return;
+    }
+
+    if (name === 'password') {
+      setUserValidation({
+        ...userValidation,
+        [name]: passwordRegCheck,
+      });
+      return;
+    }
+
+    if (user.password === user.passwordCheck) {
+      setUserValidation({
+        ...userValidation,
+        passwordCheck: true,
+      });
+    }
   };
 
   const onSubmitSignUp = async () => {
@@ -80,9 +110,9 @@ const SignUp = () => {
         type="email"
         placeholder="이메일을 입력하세요."
         errorMessage="이메일 형식이 올바르지 않습니다."
-        isErrorUserValidation={isErrorUserValidation}
         value={user.email}
         onChange={onChangeSignUp}
+        isError={!userValidation.email}
       />
       <TextField
         label="비밀번호"
@@ -91,9 +121,9 @@ const SignUp = () => {
         type="password"
         placeholder="비밀번호를 입력하세요."
         errorMessage="비밀번호 형식이 올바르지 않습니다."
-        isErrorUserValidation={isErrorUserValidation}
         value={user.password}
         onChange={onChangeSignUp}
+        isError={!userValidation.password}
       />
       <TextField
         label="비밀번호 확인"
@@ -102,11 +132,11 @@ const SignUp = () => {
         type="password"
         placeholder="비밀번호를 확인해 주세요"
         errorMessage="비밀번호가 동일하지 않습니다."
-        isErrorUserValidation={isErrorUserValidation}
         value={user.passwordCheck}
         onChange={onChangeSignUp}
+        isError={!userValidation.passwordCheck}
       />
-      <Button onClick={onSubmitSignUp}>회원가입하기</Button>
+      <Button onClick={onSubmitSignUp} disabled={isErrorUserValidation}>회원가입하기</Button>
     </Container>
   );
 };
@@ -136,4 +166,8 @@ const Button = styled.button`
   color: #ffffff;
   border: none;
   cursor: pointer;
+
+  :disabled {
+    background-color: #d5d5d5;
+  }
 `;
