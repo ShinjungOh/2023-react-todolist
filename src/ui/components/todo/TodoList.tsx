@@ -3,19 +3,30 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 
 import { TodoItem } from './index';
+import { TodoProps } from '../../../lib/types/todoItemProps';
 
 interface Props {
-  todos?: [];
+  todos: TodoProps[];
+  onUpdate: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
-const TodoList = ({ todos }: Props) => {
+const TodoList = ({
+  todos,
+  onUpdate,
+  onDelete,
+}: Props) => {
   const navigate = useNavigate();
+
+  console.log(todos);
 
   const onClickSignOut = () => {
     // eslint-disable-next-line no-restricted-globals
-    confirm('로그아웃 하시겠습니까?');
-    localStorage.removeItem('ACCESS_TOKEN');
-    navigate('/', { replace: true });
+    const response = confirm('로그아웃 하시겠습니까?');
+    if (response) {
+      localStorage.removeItem('ACCESS_TOKEN');
+      navigate('/', { replace: true });
+    }
   };
 
   return (
@@ -23,7 +34,20 @@ const TodoList = ({ todos }: Props) => {
       <Title>📌 할 일 목록</Title>
       <SignOutButton onClick={onClickSignOut}>로그아웃</SignOutButton>
       <TodoContainer>
-        <TodoItem />
+        {
+          todos && (
+            todos.map((todo: any) => (
+              <TodoItem
+                {...todos}
+                key={todo.id}
+                id={todo.id}
+                text={todo.todo}
+                isCompleted={todo.isCompleted}
+                onUpdate={onUpdate}
+                onDelete={onDelete}
+              />))
+          )
+        }
       </TodoContainer>
     </Container>
   );
@@ -32,7 +56,7 @@ const TodoList = ({ todos }: Props) => {
 export default TodoList;
 
 const Container = styled.div`
-  width: 100%;  
+  width: 100%;
   height: 80%;
   padding: 40px 20px 40px 20px;
 `;
@@ -47,7 +71,7 @@ const Title = styled.h2`
 `;
 
 const SignOutButton = styled.button`
-width: 70px;
+  width: 70px;
   height: 30px;
   background-color: #3a68f9;
   color: #ffffff;

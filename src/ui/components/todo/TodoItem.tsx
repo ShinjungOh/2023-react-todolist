@@ -2,27 +2,30 @@ import React from 'react';
 import styled from 'styled-components';
 import { FaCheck, FaPen, FaTrash } from 'react-icons/fa';
 
-export interface TodoProps {
-  id?: string;
-  todo?: string;
-  isCompleted?: boolean;
+import { TodoProps } from '../../../lib/types/todoItemProps';
+
+interface Props {
+  onUpdate: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 const TodoItem = ({
   id,
-  todo,
   isCompleted,
-}: TodoProps) => (
+  text,
+  onUpdate,
+  onDelete,
+}: TodoProps&Props) => (
   <Container>
     <CheckBox>
       {isCompleted && (
       <FaCheck />
       )}
     </CheckBox>
-    <TodoText>할 일을 입력하세요.</TodoText>
+    <TodoText>{text}</TodoText>
     <ButtonContainer>
-      <FaPen size="20" color="#b6b6b6" cursor="pointer" />
-      <FaTrash size="20" color="#313131" cursor="pointer" />
+      <FaPen size="20" color="#b6b6b6" cursor="pointer" onClick={() => onUpdate(id)} />
+      <FaTrash size="20" color="#313131" cursor="pointer" onClick={() => onDelete(id)} />
     </ButtonContainer>
   </Container>
 );

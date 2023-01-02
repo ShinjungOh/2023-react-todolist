@@ -1,31 +1,63 @@
 import React, {
-  ChangeEvent, FormEvent, useState,
+  ChangeEvent, FormEvent, useEffect, useState,
 } from 'react';
 import { useNavigate } from 'react-router';
 
 import { TodoCreate, TodoList } from '../components/todo';
-
-export interface TodoProps {
-  id?: string;
-  isCompleted?: boolean;
-  value?: string;
-}
+import { TodoProps } from '../../lib/types/todoItemProps';
+import {
+  createTodo, deleteTodo, getTodos, updateTodo,
+} from '../../lib/apis/todoItemApi';
 
 const Todo = () => {
   const navigate = useNavigate();
-  const [todos, setTodos] = useState<TodoProps[]>();
-  const [createTodo, setCreateTodo] = useState('');
+  const [todos, setTodos] = useState<TodoProps[]>([]);
+  const [createTodoItem, setCreateTodoItem] = useState('');
 
   const onChangeTodoInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setCreateTodo(value);
+    setCreateTodoItem(value);
   };
 
-  const onSubmitTodo = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // @ts-ignore
-    setTodos(createTodo);
-    setCreateTodo('');
+  const onSubmitTodo = async (e: FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      const response = await createTodo(createTodoItem);
+      setTodos(response.data);
+      setCreateTodoItem('');
+    } catch (e) {
+      alert('에러 발생');
+      console.log(e);
+    }
+  };
+
+  const onUpdateTodo = async (id: number) => {
+    try {
+      const response = await updateTodo(id);
+    } catch (e) {
+      alert('에러 발생');
+      console.log(e);
+    }
+  };
+
+  const onDeleteTodo = async (id: number) => {
+    try {
+      const response = await deleteTodo(id);
+    } catch (e) {
+      alert('에러 발생');
+      console.log(e);
+    }
+  };
+
+  const getTodosRender = async () => {
+    try {
+      const response = await getTodos();
+      setTodos(response.data);
+    } catch (e) {
+      alert('에러 발생');
+      setTodos([]);
+      console.log(e);
+    }
   };
 
   const hasAccessToken = () => {
@@ -34,12 +66,15 @@ const Todo = () => {
     }
   };
 
-  hasAccessToken();
+  useEffect(() => {
+    getTodosRender();
+    hasAccessToken();
+  }, []);
 
   return (
     <>
-      <TodoList />
-      <TodoCreate onChange={onChangeTodoInput} onSubmit={onSubmitTodo} value={createTodo} />
+      <TodoList todos={todos} onUpdate={onUpdateTodo} onDelete={onDeleteTodo} />
+      <TodoCreate onChange={onChangeTodoInput} onSubmit={onSubmitTodo} />
     </>
   );
 };
