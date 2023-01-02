@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 
@@ -14,6 +14,16 @@ const Home = () => {
   const goToSignUpPageButton = () => {
     navigate(Path.SIGNUP);
   };
+
+  const hasAccessToken = () => {
+    if ((localStorage.getItem('ACCESS_TOKEN'))) {
+      navigate('/todo');
+    }
+  };
+
+  useEffect(() => {
+    hasAccessToken();
+  }, []);
 
   return (
     <Container>

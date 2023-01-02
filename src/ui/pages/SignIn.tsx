@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 
@@ -38,6 +38,16 @@ const SignIn = () => {
       alert('로그인에 실패했습니다.');
     }
   };
+
+  const hasAccessToken = () => {
+    if ((localStorage.getItem('ACCESS_TOKEN'))) {
+      navigate('/todo');
+    }
+  };
+
+  useEffect(() => {
+    hasAccessToken();
+  }, []);
 
   return (
     <Container>

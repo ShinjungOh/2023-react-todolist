@@ -1,4 +1,6 @@
-import React, { ChangeEvent, useMemo, useState } from 'react';
+import React, {
+  ChangeEvent, useEffect, useMemo, useState,
+} from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 
@@ -23,11 +25,6 @@ const SignUp = () => {
 
   const isErrorUserValidation = useMemo((() => !(userValidation.email && userValidation.password && userValidation.passwordCheck)), [userValidation.email, userValidation.password, userValidation.passwordCheck]);
 
-  const emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-  const passwordRegExp = /^[A-Za-z0-9]{7,}$/;
-  const emailRegExpCheck = emailRegExp.test(user.email);
-  const passwordRegCheck = passwordRegExp.test(user.password);
-
   const goBackButton = () => {
     navigate(-1);
   };
@@ -40,6 +37,8 @@ const SignUp = () => {
     });
 
     if (name === 'email') {
+      const emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+      const emailRegExpCheck = emailRegExp.test(value);
       setUserValidation({
         ...userValidation,
         [name]: emailRegExpCheck,
@@ -48,6 +47,8 @@ const SignUp = () => {
     }
 
     if (name === 'password') {
+      const passwordRegExp = /^.{8,}$/;
+      const passwordRegCheck = passwordRegExp.test(value);
       setUserValidation({
         ...userValidation,
         [name]: passwordRegCheck,
@@ -55,10 +56,10 @@ const SignUp = () => {
       return;
     }
 
-    if (user.password === user.passwordCheck) {
+    if (name === 'passwordCheck') {
       setUserValidation({
         ...userValidation,
-        passwordCheck: true,
+        [name]: value === user.password,
       });
     }
   };
@@ -76,6 +77,16 @@ const SignUp = () => {
       alert('에러 발생');
     }
   };
+
+  const hasAccessToken = () => {
+    if ((localStorage.getItem('ACCESS_TOKEN'))) {
+      navigate('/todo');
+    }
+  };
+
+  useEffect(() => {
+    hasAccessToken();
+  }, []);
 
   return (
     <Container>
