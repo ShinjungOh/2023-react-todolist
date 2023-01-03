@@ -6,13 +6,13 @@ export const createTodo = async (todo: string) => {
     todo,
   };
   const response = await client.post(url, data);
-  return response;
+  return response.data;
 };
 
 export const getTodos = async () => {
   const url = '/todos';
   const response = await client.get(url);
-  return response;
+  return response.data;
 };
 
 export const updateTodo = async (

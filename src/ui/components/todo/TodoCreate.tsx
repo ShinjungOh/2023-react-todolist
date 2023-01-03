@@ -2,13 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface Props {
+  value: string;
   onChange: (e: any) => void;
   onSubmit: (e: any) => void;
 }
 
-const TodoCreate = ({ onChange, onSubmit }: Props) => (
+const TodoCreate = ({ value, onChange, onSubmit }: Props) => (
   <Container>
-    <Input onChange={onChange} />
+    <Input value={value} onChange={onChange} autoFocus />
     <Button onClick={onSubmit}>등록</Button>
   </Container>
 );

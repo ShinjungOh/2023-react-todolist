@@ -18,8 +18,6 @@ const TodoList = ({
 }: Props) => {
   const navigate = useNavigate();
 
-  console.log(todos);
-
   const onClickSignOut = () => {
     // eslint-disable-next-line no-restricted-globals
     const response = confirm('로그아웃 하시겠습니까?');
@@ -36,16 +34,16 @@ const TodoList = ({
       <TodoContainer>
         {
           todos && (
-            todos.map((todo: any) => (
+            todos.map((todoItem: TodoProps) => (
               <TodoItem
-                {...todos}
-                key={todo.id}
-                id={todo.id}
-                text={todo.todo}
-                isCompleted={todo.isCompleted}
-                onUpdate={onUpdate}
-                onDelete={onDelete}
-              />))
+                  key={todoItem.id}
+                  id={todoItem.id}
+                  todo={todoItem.todo}
+                  isCompleted={todoItem.isCompleted}
+                  onUpdate={onUpdate}
+                  onDelete={onDelete}
+              />
+            ))
           )
         }
       </TodoContainer>

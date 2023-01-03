@@ -23,7 +23,11 @@ const Todo = () => {
     try {
       e.preventDefault();
       const response = await createTodo(createTodoItem);
-      setTodos(response.data);
+      // const arr = todos;
+      // arr.push(response.data);
+      // setTodos(arr);
+      console.log(response);
+      setTodos([...todos, response]);
       setCreateTodoItem('');
     } catch (e) {
       alert('에러 발생');
@@ -42,7 +46,7 @@ const Todo = () => {
 
   const onDeleteTodo = async (id: number) => {
     try {
-      const response = await deleteTodo(id);
+      await deleteTodo(id);
     } catch (e) {
       alert('에러 발생');
       console.log(e);
@@ -52,7 +56,7 @@ const Todo = () => {
   const getTodosRender = async () => {
     try {
       const response = await getTodos();
-      setTodos(response.data);
+      setTodos(response);
     } catch (e) {
       alert('에러 발생');
       setTodos([]);
@@ -74,7 +78,7 @@ const Todo = () => {
   return (
     <>
       <TodoList todos={todos} onUpdate={onUpdateTodo} onDelete={onDeleteTodo} />
-      <TodoCreate onChange={onChangeTodoInput} onSubmit={onSubmitTodo} />
+      <TodoCreate value={createTodoItem} onChange={onChangeTodoInput} onSubmit={onSubmitTodo} />
     </>
   );
 };
