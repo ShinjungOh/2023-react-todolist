@@ -13,13 +13,6 @@ const Todo = () => {
   const navigate = useNavigate();
   const [todos, setTodos] = useState<TodoProps[]>([]);
   const [createTodoItem, setCreateTodoItem] = useState('');
-  const [updateTodoItem, setUpdateTodoItem] = useState('');
-
-  const [isToggleOpen, setIsToggleOpen] = useState(false);
-
-  const isToggleUpdate = (id: number) => {
-    setIsToggleOpen((prev) => !prev);
-  };
 
   const isCompletedTodo = async (id: number) => {
     const findTodo = todos.find((todo) => todo.id === id);
@@ -53,16 +46,10 @@ const Todo = () => {
     }
   };
 
-  const onChangeTodoUpdateInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setUpdateTodoItem(value);
-  };
-
-  const onUpdateTodo = async (id: number, isCompleted: boolean, todo: string) => {
+  const onUpdateTodo = async (id: number, todo: string, isCompleted: boolean) => {
     try {
-      const response = await updateTodo(id, todo, isCompleted);
-      console.log(response);
-      // await getTodosRender();
+      const { data } = await updateTodo(id, todo, isCompleted);
+      setTodos((prev) => prev.map((todo) => (todo.id === data.id ? data : todo)));
     } catch (e) {
       alert('에러 발생');
       console.log(e);
@@ -111,10 +98,6 @@ const Todo = () => {
         onUpdate={onUpdateTodo}
         onDelete={onDeleteTodo}
         onToggleCompleted={isCompletedTodo}
-        onChange={onChangeTodoUpdateInput}
-        value={updateTodoItem}
-        isToggleOpen={isToggleOpen}
-        isToggleUpdate={isToggleUpdate}
       />
       <TodoCreate
         value={createTodoItem}

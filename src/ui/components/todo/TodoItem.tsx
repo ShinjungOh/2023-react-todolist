@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 import {
   FaCheck, FaPen, FaRegTimesCircle, FaTrash,
@@ -8,12 +8,8 @@ import { TodoProps } from '../../../lib/types/todoItemProps';
 
 interface Props {
   onToggleCompleted?: any;
-  onUpdate: (id: number, isCompleted: boolean, todo: string) => void;
+  onUpdate: (id: number, todo: string, isCompleted: boolean) => void;
   onDelete: (id: number) => void;
-  onChange: (e: any) => void;
-  value: string;
-  isToggleOpen?: boolean;
-  isToggleUpdate: any;
 }
 
 const TodoItem = ({
@@ -23,39 +19,59 @@ const TodoItem = ({
   onToggleCompleted,
   onUpdate,
   onDelete,
-  onChange,
-  value,
-  isToggleOpen,
-  isToggleUpdate,
-}: TodoProps&Props) => (
-  <Container>
-    { !isToggleOpen && (
-      <>
-        <CheckBox onClick={() => !onToggleCompleted(id)}>
-          {isCompleted && (
-          <FaCheck />
-          )}
-        </CheckBox>
-        <TodoText>{todo}</TodoText>
-        <ButtonContainer>
-          <FaPen size="20" color="#b6b6b6" cursor="pointer" onClick={() => isToggleUpdate(id)} />
-          <FaTrash size="20" color="#e5e5e5" cursor="pointer" onClick={() => onDelete(id)} />
-        </ButtonContainer>
-      </>)
-      }
-    {
-        isToggleOpen && (
-        <>
-          <Input onChange={onChange} value={value} autoFocus />
-          <ButtonContainer>
-            <FaCheck size="20" color="#696969" cursor="pointer" onClick={() => onUpdate(id, isCompleted, todo)} />
-            <FaRegTimesCircle size="20" color="#696969" cursor="pointer" onClick={() => isToggleUpdate(id)} />
-          </ButtonContainer>
-        </>
-        )
+}: TodoProps&Props) => {
+  const [isToggleOpen, setIsToggleOpen] = useState(false);
+  const [todoUpdateValue, setTodoUpdateValue] = useState('');
+
+  const isToggleUpdate = (id: number) => {
+    setIsToggleOpen((prev) => !prev);
+    if (isToggleOpen) {
+      setTodoUpdateValue('');
+    } else {
+      setTodoUpdateValue(todo);
     }
-  </Container>
-);
+  };
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setTodoUpdateValue(value);
+  };
+
+  const onClickUpdateTodo = (id: number, value: string, isCompleted: boolean) => {
+    onUpdate(id, value, isCompleted);
+    setIsToggleOpen(false);
+  };
+
+  return (
+    <Container>
+      { !isToggleOpen && (
+        <>
+          <CheckBox onClick={() => !onToggleCompleted(id)}>
+            {isCompleted && (
+              <FaCheck />
+            )}
+          </CheckBox>
+          <TodoText>{todo}</TodoText>
+          <ButtonContainer>
+            <FaPen size="20" color="#b6b6b6" cursor="pointer" onClick={() => isToggleUpdate(id)} />
+            <FaTrash size="20" color="#e5e5e5" cursor="pointer" onClick={() => onDelete(id)} />
+          </ButtonContainer>
+        </>)
+      }
+      {
+        isToggleOpen && (
+          <>
+            <Input onChange={onChange} value={todoUpdateValue} autoFocus />
+            <ButtonContainer>
+              <FaCheck size="20" color="#696969" cursor="pointer" onClick={() => onClickUpdateTodo(id, todoUpdateValue, isCompleted)} />
+              <FaRegTimesCircle size="20" color="#696969" cursor="pointer" onClick={() => isToggleUpdate(id)} />
+            </ButtonContainer>
+          </>
+        )
+      }
+    </Container>
+  );
+};
 
 export default TodoItem;
 
