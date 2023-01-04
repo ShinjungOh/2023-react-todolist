@@ -1,32 +1,59 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaCheck, FaPen, FaTrash } from 'react-icons/fa';
+import {
+  FaCheck, FaPen, FaRegTimesCircle, FaTrash,
+} from 'react-icons/fa';
 
 import { TodoProps } from '../../../lib/types/todoItemProps';
 
 interface Props {
-  onUpdate: (id: number) => void;
+  onToggleCompleted?: any;
+  onUpdate: (id: number, isCompleted: boolean, todo: string) => void;
   onDelete: (id: number) => void;
+  onChange: (e: any) => void;
+  value: string;
+  isToggleOpen?: boolean;
+  isToggleUpdate: any;
 }
 
 const TodoItem = ({
   id,
   isCompleted,
-  text,
+  todo,
+  onToggleCompleted,
   onUpdate,
   onDelete,
+  onChange,
+  value,
+  isToggleOpen,
+  isToggleUpdate,
 }: TodoProps&Props) => (
   <Container>
-    <CheckBox>
-      {isCompleted && (
-      <FaCheck />
-      )}
-    </CheckBox>
-    <TodoText>{text}</TodoText>
-    <ButtonContainer>
-      <FaPen size="20" color="#b6b6b6" cursor="pointer" onClick={() => onUpdate(id)} />
-      <FaTrash size="20" color="#313131" cursor="pointer" onClick={() => onDelete(id)} />
-    </ButtonContainer>
+    { !isToggleOpen && (
+      <>
+        <CheckBox onClick={() => !onToggleCompleted(id)}>
+          {isCompleted && (
+          <FaCheck />
+          )}
+        </CheckBox>
+        <TodoText>{todo}</TodoText>
+        <ButtonContainer>
+          <FaPen size="20" color="#b6b6b6" cursor="pointer" onClick={() => isToggleUpdate(id)} />
+          <FaTrash size="20" color="#e5e5e5" cursor="pointer" onClick={() => onDelete(id)} />
+        </ButtonContainer>
+      </>)
+      }
+    {
+        isToggleOpen && (
+        <>
+          <Input onChange={onChange} value={value} autoFocus />
+          <ButtonContainer>
+            <FaCheck size="20" color="#696969" cursor="pointer" onClick={() => onUpdate(id, isCompleted, todo)} />
+            <FaRegTimesCircle size="20" color="#696969" cursor="pointer" onClick={() => isToggleUpdate(id)} />
+          </ButtonContainer>
+        </>
+        )
+    }
   </Container>
 );
 
@@ -71,4 +98,19 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+`;
+
+const Input = styled.input`
+  width: 220px;
+  height: 35px;
+  margin-right: 5px;
+  padding: 5px 10px 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #b6b6b6;
+  outline: none;
+  font-size: 17px;
+
+  :focus {
+    border: 1px solid #8a8a8a;
+  }
 `;

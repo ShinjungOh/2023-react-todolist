@@ -7,14 +7,24 @@ import { TodoProps } from '../../../lib/types/todoItemProps';
 
 interface Props {
   todos: TodoProps[];
-  onUpdate: (id: number) => void;
+  onUpdate: (id: number, isCompleted: boolean, todo: string) => void;
   onDelete: (id: number) => void;
+  onToggleCompleted?: any;
+  onChange: (e: any) => void;
+  value: string;
+  isToggleOpen?: any;
+  isToggleUpdate: any;
 }
 
 const TodoList = ({
   todos,
   onUpdate,
   onDelete,
+  onToggleCompleted,
+  onChange,
+  value,
+  isToggleOpen,
+  isToggleUpdate,
 }: Props) => {
   const navigate = useNavigate();
 
@@ -42,6 +52,11 @@ const TodoList = ({
                   isCompleted={todoItem.isCompleted}
                   onUpdate={onUpdate}
                   onDelete={onDelete}
+                  onToggleCompleted={onToggleCompleted}
+                  onChange={onChange}
+                  value={value}
+                  isToggleOpen={isToggleOpen}
+                  isToggleUpdate={isToggleUpdate}
               />
             ))
           )

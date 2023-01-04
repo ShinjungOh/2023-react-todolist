@@ -16,11 +16,11 @@ export const getTodos = async () => {
 };
 
 export const updateTodo = async (
-  id?: number,
-  todo?: string,
-  isCompleted?: boolean,
+  id: number,
+  todo: string,
+  isCompleted: boolean,
 ) => {
-  const url = `/todos/:${id}`;
+  const url = `/todos/${id}`;
   const data = {
     todo,
     isCompleted,
@@ -30,7 +30,7 @@ export const updateTodo = async (
 };
 
 export const deleteTodo = async (id: number) => {
-  const url = `/todos/:${id}`;
+  const url = `/todos/${id}`;
   const response = await client.delete(url);
   return response;
 };

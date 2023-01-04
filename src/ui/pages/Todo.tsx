@@ -13,8 +13,26 @@ const Todo = () => {
   const navigate = useNavigate();
   const [todos, setTodos] = useState<TodoProps[]>([]);
   const [createTodoItem, setCreateTodoItem] = useState('');
+  const [updateTodoItem, setUpdateTodoItem] = useState('');
+
+  const [isToggleOpen, setIsToggleOpen] = useState(false);
+
+  const isToggleUpdate = (id: number) => {
+    setIsToggleOpen((prev) => !prev);
+  };
+
+  const isCompletedTodo = async (id: number) => {
+    const findTodo = todos.find((todo) => todo.id === id);
+    if (findTodo) {
+      const { data } = await updateTodo(findTodo.id, findTodo.todo, !findTodo.isCompleted);
+      setTodos((prevTodo) => prevTodo.map((todo) => (todo.id === data.id ? data : todo)));
+    }
+  };
+
+  console.log(todos);
 
   const onChangeTodoInput = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(createTodoItem);
     const { value } = e.target;
     setCreateTodoItem(value);
   };
@@ -35,9 +53,16 @@ const Todo = () => {
     }
   };
 
-  const onUpdateTodo = async (id: number) => {
+  const onChangeTodoUpdateInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setUpdateTodoItem(value);
+  };
+
+  const onUpdateTodo = async (id: number, isCompleted: boolean, todo: string) => {
     try {
-      const response = await updateTodo(id);
+      const response = await updateTodo(id, todo, isCompleted);
+      console.log(response);
+      // await getTodosRender();
     } catch (e) {
       alert('에러 발생');
       console.log(e);
@@ -46,7 +71,11 @@ const Todo = () => {
 
   const onDeleteTodo = async (id: number) => {
     try {
-      await deleteTodo(id);
+      const response = await deleteTodo(id);
+      alert('삭제되었습니다.');
+      console.log(response);
+      setTodos(((prev) => prev.filter((todo) => todo.id !== id)));
+      // await getTodosRender();
     } catch (e) {
       alert('에러 발생');
       console.log(e);
@@ -77,8 +106,21 @@ const Todo = () => {
 
   return (
     <>
-      <TodoList todos={todos} onUpdate={onUpdateTodo} onDelete={onDeleteTodo} />
-      <TodoCreate value={createTodoItem} onChange={onChangeTodoInput} onSubmit={onSubmitTodo} />
+      <TodoList
+        todos={todos}
+        onUpdate={onUpdateTodo}
+        onDelete={onDeleteTodo}
+        onToggleCompleted={isCompletedTodo}
+        onChange={onChangeTodoUpdateInput}
+        value={updateTodoItem}
+        isToggleOpen={isToggleOpen}
+        isToggleUpdate={isToggleUpdate}
+      />
+      <TodoCreate
+        value={createTodoItem}
+        onChange={onChangeTodoInput}
+        onSubmit={onSubmitTodo}
+      />
     </>
   );
 };
